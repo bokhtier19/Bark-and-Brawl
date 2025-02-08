@@ -1,50 +1,90 @@
-import React, { useState } from 'react';
-import { hero_slides } from '../assets/assets.js';
-import ArrowLeft02Icon from '../assets/arrow_left.tsx';
-import ArrowRight02Icon from '../assets/arrow_right.tsx';
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { hero_slides } from "../assets/assets.js";
+import ArrowLeft02Icon from "../assets/arrow_left.tsx";
+import ArrowRight02Icon from "../assets/arrow_right.tsx";
 
 const Hero = () => {
-	const [currentIndex, setCurrentIndex] = useState(0);
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const slideInterval = 5000; // Time in milliseconds (5 seconds)
 
-	const LeftSlide = () => {
-		setCurrentIndex(currentIndex === 0 ? hero_slides.length - 1 : currentIndex - 1);
-	};
+    // Function to go to the previous slide
+    const LeftSlide = () => {
+        setCurrentIndex((prevIndex) => (prevIndex === 0 ? hero_slides.length - 1 : prevIndex - 1));
+    };
 
-	const RightSlide = () => {
-		setCurrentIndex(currentIndex === hero_slides.length - 1 ? 0 : currentIndex + 1);
-	};
+    // Function to go to the next slide
+    const RightSlide = () => {
+        setCurrentIndex((prevIndex) => (prevIndex === hero_slides.length - 1 ? 0 : prevIndex + 1));
+    };
 
-	const goToReview = (index) => {
-		setCurrentIndex(index);
-	};
+    // Auto-slide logic
+    useEffect(() => {
+        const interval = setInterval(() => {
+            RightSlide();
+        }, slideInterval);
 
-	return (
-		<div>
-			<div className='group relative border-t border-x'>
-				<img src={hero_slides[currentIndex].image} alt='Hero slide' className='w-full h-[250px] md:h-[700px]  xl:h-[950px]  object-cover transition-transform duration-500 ease-in-out' />
-				<div className='absolute inset-0 bg-black opacity-0 md:opacity-30 hover:opacity-0'></div>
-				<div className='md:absolute inset-0 flex justify-center items-end border-l border-r border-b  md:bg-inherit'>
-					<p className='uppercase font-black text-3xl fjalla-one-regular md:text-5xl xl:text-7xl text-white p-4 md:mb-20 md:text-white w-full text-center px-4'>{hero_slides[currentIndex].dialog}</p>
-				</div>
+        return () => clearInterval(interval);
+    }, [currentIndex]);
 
-				<div className='hidden group-hover:block absolute top-1/2 left-4 px-2 py-2 transform -translate-y-1/2 cursor-pointer bg-gray-800 rounded-full' onClick={LeftSlide}>
-					<button>
-						<ArrowLeft02Icon color='white' className='arrow-effect-left' />
-					</button>
-				</div>
-				<div className='hidden group-hover:block absolute top-1/2 px-2 py-2 right-4 transform -translate-y-1/2 cursor-pointer bg-gray-800 rounded-full' onClick={RightSlide}>
-					<button>
-						<ArrowRight02Icon color='white' className='arrow-effect-right' />
-					</button>
-				</div>
-			</div>
-			<div className='flex justify-center mt-8 space-x-2'>
-				{hero_slides.map((_, index) => (
-					<span key={index} onClick={() => goToReview(index)} className={`h-2 w-2 rounded-full cursor-pointer ${currentIndex === index ? 'bg-gray-800' : 'bg-gray-300'}`}></span>
-				))}
-			</div>
-		</div>
-	);
+    return (
+        <div>
+            <div className="relative overflow-hidden border-t group border-x">
+                <div className="relative w-full h-[250px] md:h-[700px] xl:h-[950px]">
+                    <AnimatePresence mode="wait">
+                        <motion.img
+                            key={currentIndex}
+                            src={hero_slides[currentIndex].image}
+                            alt="Hero slide"
+                            className="absolute object-cover w-full h-full"
+                            initial={{ opacity: 0, x: 100 }} // Slide in from right
+                            animate={{ opacity: 1, x: 0 }} // Fade in and settle
+                            exit={{ opacity: 0, x: -100 }} // Slide out to left
+                            transition={{ duration: 0.5, ease: "easeInOut" }} // Smooth animation
+                        />
+                    </AnimatePresence>
+                </div>
+                <div className="absolute inset-0 bg-black opacity-0 md:opacity-30 hover:opacity-0"></div>
+
+                {/* Text Animation */}
+                <div className="absolute inset-0 flex items-end justify-center">
+                    <AnimatePresence mode="wait">
+                        <motion.p
+                            key={`text-${currentIndex}`}
+                            className="w-full p-4 px-4 text-3xl font-black text-center text-white uppercase -translate-y-1/2 fjalla-one-regular md:text-5xl xl:text-7xl md:mb-20 md:text-white"
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -30 }}
+                            transition={{ duration: 0.6, ease: "easeOut" }}
+                        >
+                            {hero_slides[currentIndex].dialog}
+                        </motion.p>
+                    </AnimatePresence>
+                </div>
+
+                {/* Left Arrow */}
+                <div className="absolute hidden px-2 py-2 transform -translate-y-1/2 bg-gray-800 rounded-full cursor-pointer group-hover:block top-1/2 left-4" onClick={LeftSlide}>
+                    <button>
+                        <ArrowLeft02Icon color="white" className="arrow-effect-left" />
+                    </button>
+                </div>
+
+                {/* Right Arrow */}
+                <div className="absolute hidden px-2 py-2 transform -translate-y-1/2 bg-gray-800 rounded-full cursor-pointer group-hover:block top-1/2 right-4" onClick={RightSlide}>
+                    <button>
+                        <ArrowRight02Icon color="white" className="arrow-effect-right" />
+                    </button>
+                </div>
+            </div>
+
+            {/* Pagination Dots */}
+            <div className="flex justify-center mt-8 space-x-2">
+                {hero_slides.map((_, index) => (
+                    <span key={index} onClick={() => setCurrentIndex(index)} className={`h-2 w-2 rounded-full cursor-pointer ${currentIndex === index ? "bg-gray-800" : "bg-gray-300"}`}></span>
+                ))}
+            </div>
+        </div>
+    );
 };
 
 export default Hero;
