@@ -1,52 +1,70 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 const Footer = () => {
-	return (
-		<div className='Footer flex justify-center bg-black tracking-widest'>
-			<div className='flex flex-col justify-center  mt-20 text-white w-[90%]'>
-				<div className='flex flex-col gap-8 md:flex-row justify-around text-xs text-white pl-0 p-6 sm:p-8 tracking-widest mb-20 w-full'>
-					<div className=''>
-						<p className='font-semibold tracking-widest text-sm mb-4'>NAVIGATION</p>
-						<ul className='leading-6 flex flex-col'>
-							<Link className='roboto-regular'>HOME</Link>
-							<Link className='roboto-regular'>ABOUT</Link>
-							<Link className='roboto-regular'>CONTACT</Link>
-							<Link className='roboto-regular'>SHOP</Link>
-						</ul>
-					</div>
-					<div>
-						<p className='font-semibold tracking-widest text-sm mb-4'>FEATURED COLLECTIONS</p>
-						<ul className='leading-6 flex flex-col roboto-regular'>
-							<Link className='roboto-regular'>BARKPACKS</Link>
-							<Link className='roboto-regular'>K9 BITE GUARDS</Link>
-							<Link className='roboto-regular'>RUFF & TUMBLE GLOVES</Link>
-							<Link className='roboto-regular'>UNDERDOG PAW PROTECTORS</Link>
-						</ul>
-					</div>
-					<div>
-						<p className='font-semibold tracking-widest text-sm mb-4'>SUPPORT</p>
-						<ul className='leading-6 flex flex-col roboto-regular'>
-							<Link className='roboto-regular'>FAQS</Link>
-							<Link className='roboto-regular'>SIZE GUIDE</Link>
-							<Link className='roboto-regular'>SHIPPING & RETURNS</Link>
-							<Link className='roboto-regular'>CONTACT US</Link>
-						</ul>
-					</div>
-				</div>
+    const link = "roboto-regular text-stone-400 transition hover:text-white";
 
-				<div className='flex  justify-center'>
-					<p className='h-px w-[80%] bg-gray-600'></p>
-				</div>
+    return (
+        <footer className="flex justify-center bg-ink tracking-widest text-white">
+            <div className="mt-16 mb-8 flex w-[92%] max-w-7xl flex-col text-xs">
+                <div className="mb-16 flex flex-col gap-10 pl-0 sm:flex-row sm:justify-around sm:p-8">
+                    <div>
+                        <p className="mb-4 text-sm font-semibold tracking-widest">Navigation</p>
+                        <ul className="flex flex-col gap-2 leading-6">
+                            <Link to="/" className={link}>
+                                Home
+                            </Link>
+                            <Link to="/about" className={link}>
+                                About
+                            </Link>
+                            <Link to="/contact" className={link}>
+                                Contact
+                            </Link>
+                            <Link to="/shop" className={link}>
+                                Shop
+                            </Link>
+                        </ul>
+                    </div>
+                    <div>
+                        <p className="mb-4 text-sm font-semibold tracking-widest">Collections</p>
+                        <ul className="flex flex-col gap-2 leading-6">
+                            <Link to="/barkpack" className={link}>
+                                Barkpack
+                            </Link>
+                            <Link to="/shop" className={link}>
+                                Tactical gear
+                            </Link>
+                            <Link to="/shop" className={link}>
+                                Gloves & guards
+                            </Link>
+                        </ul>
+                    </div>
+                    <div>
+                        <p className="mb-4 text-sm font-semibold tracking-widest">Support</p>
+                        <ul className="flex flex-col gap-2 leading-6">
+                            <Link to="/contact" className={link}>
+                                FAQs & contact
+                            </Link>
+                            <Link to="/contact" className={link}>
+                                Shipping & returns
+                            </Link>
+                        </ul>
+                    </div>
+                </div>
 
-				<div className='flex flex-col gap-4 sm:flex-row justify-around py-4 text-xs tracking-widest'>
-					<p>2024 &copy; Bark and Brawl </p>
-					<p>Privacy Policy</p>
-					<p>Terms and Conditions</p>
-				</div>
-			</div>
-		</div>
-	);
+                <div className="flex justify-center">
+                    <div className="h-px w-4/5 bg-stone-600" />
+                </div>
+
+                <div className="flex flex-col items-center justify-around gap-4 py-6 text-stone-500 sm:flex-row">
+                    <p>© {new Date().getFullYear()} Bark & Brawl</p>
+                    <span className="hidden sm:inline">·</span>
+                    <p>Privacy</p>
+                    <span className="hidden sm:inline">·</span>
+                    <p>Terms</p>
+                </div>
+            </div>
+        </footer>
+    );
 };
 
 export default Footer;

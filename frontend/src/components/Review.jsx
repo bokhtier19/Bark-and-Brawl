@@ -1,9 +1,9 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { reviews } from "../assets/assets";
 import ArrowLeft02Icon from "../assets/arrow_left";
 import ArrowRight02Icon from "../assets/arrow_right";
-import { AnimationContext } from "../context/AnimaitonContext";
+import { AnimationContext } from "../context/AnimationContext.jsx";
 
 const Review = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -11,15 +11,14 @@ const Review = () => {
 
     const { containerVariants, childVariants } = useContext(AnimationContext);
 
-    // Motion variants for sliding animation
     const reviewVariants = {
         enter: (direction) => ({
-            x: direction === "right" ? 100 : -100,
+            x: direction === "right" ? 48 : -48,
             opacity: 0,
         }),
         center: { x: 0, opacity: 1 },
         exit: (direction) => ({
-            x: direction === "right" ? -100 : 100,
+            x: direction === "right" ? -48 : 48,
             opacity: 0,
         }),
     };
@@ -40,24 +39,25 @@ const Review = () => {
     };
 
     return (
-        <div className="flex justify-center">
-            <div className="w-3/4 mt-10 border">
-                {/* Title */}
-                <div className="flex flex-col items-center justify-center text-center">
-                    <p className="mt-4 text-xl text-center text-gray-600 uppercase">"Two Paws Up: What Our Furry Fighters Are Barking About!"</p>
-                    <div className="w-1/3 h-px mt-2 bg-gray-600"></div>
+        <section className="flex justify-center px-2 py-10">
+            <div className="w-full max-w-4xl rounded-3xl border border-stone-100 bg-white shadow-card">
+                <div className="flex flex-col items-center px-4 pt-10 text-center">
+                    <p className="fjalla-one-regular text-lg uppercase tracking-wide text-ink-muted md:text-xl">Two paws up — what fighters are barking about</p>
+                    <div className="mt-4 h-px w-24 bg-accent/60" />
                 </div>
 
-                {/* Review Content */}
-                <div className="flex flex-col items-center w-full p-8 mx-4 mt-8 mb-8 group">
-                    <div className="flex items-center justify-around w-full text-center">
-                        {/* Left Arrow */}
-                        <button aria-label="Previous Review" className="flex items-center px-2 py-2 bg-gray-500 rounded-full cursor-pointer active:bg-white" onClick={handlePrev}>
-                            <ArrowLeft02Icon color="white" className="bg-gray-500 rounded-full arrow-effect-left" />
+                <div className="flex flex-col items-center px-4 py-10">
+                    <div className="flex w-full items-center justify-between gap-4">
+                        <button
+                            type="button"
+                            aria-label="Previous review"
+                            className="shrink-0 rounded-full bg-stone-100 p-3 text-ink transition hover:bg-stone-200 focus-visible:outline focus-visible:ring-2 focus-visible:ring-accent"
+                            onClick={handlePrev}
+                        >
+                            <ArrowLeft02Icon color="currentColor" className="h-5 w-5" />
                         </button>
 
-                        {/* Animated Review Container */}
-                        <div className="relative flex items-center justify-center w-full min-h-80">
+                        <div className="relative flex min-h-[200px] flex-1 items-center justify-center overflow-hidden md:min-h-[240px]">
                             <AnimatePresence custom={slideDirection} mode="wait">
                                 <motion.div
                                     key={currentIndex}
@@ -66,40 +66,45 @@ const Review = () => {
                                     initial="enter"
                                     animate="center"
                                     exit="exit"
-                                    transition={{ duration: 0.6, ease: "easeInOut" }}
-                                    className="absolute flex flex-col items-center justify-center w-full text-center"
+                                    transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                                    className="absolute flex flex-col items-center px-2 text-center"
                                 >
-                                    <p className="w-full text-2xl font-bold tracking-wider uppercase text-balance md:text-4xl fjalla-one-regular md:leading-relaxed">
-                                        "{reviews[currentIndex].Review}"
+                                    <p className="fjalla-one-regular text-xl font-normal uppercase leading-snug tracking-wide text-ink md:text-3xl">
+                                        {reviews[currentIndex].Review}
                                     </p>
-                                    <p className="mt-8 tracking-widest text-gray-500 uppercase">-- {reviews[currentIndex].Reviewer}</p>
+                                    <p className="mt-8 text-xs font-semibold uppercase tracking-[0.25em] text-ink-muted">— {reviews[currentIndex].Reviewer}</p>
                                 </motion.div>
                             </AnimatePresence>
                         </div>
 
-                        {/* Right Arrow */}
-                        <button aria-label="Next Review" className="flex items-center px-2 py-2 bg-gray-500 rounded-full cursor-pointer active:bg-white" onClick={handleNext}>
-                            <ArrowRight02Icon color="white" className="arrow-effect-right" />
+                        <button
+                            type="button"
+                            aria-label="Next review"
+                            className="shrink-0 rounded-full bg-stone-100 p-3 text-ink transition hover:bg-stone-200 focus-visible:outline focus-visible:ring-2 focus-visible:ring-accent"
+                            onClick={handleNext}
+                        >
+                            <ArrowRight02Icon color="currentColor" className="h-5 w-5" />
                         </button>
                     </div>
 
-                    {/* Pagination Dots */}
-                    <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={containerVariants} className="flex justify-center mt-8 space-x-2">
+                    <motion.div initial="hidden" whileInView="show" viewport={{ once: true }} variants={containerVariants} className="mt-10 flex flex-wrap justify-center gap-2">
                         {reviews.map((_, index) => (
-                            <motion.span
+                            <motion.button
                                 variants={childVariants}
-                                role="button"
-                                tabIndex="0"
+                                type="button"
+                                key={`review-dot-${index}`}
                                 aria-label={`Go to review ${index + 1}`}
-                                key={index}
+                                aria-current={currentIndex === index}
                                 onClick={() => goToReview(index)}
-                                className={`h-2 w-2 rounded-full cursor-pointer ${currentIndex === index ? "bg-gray-800" : "bg-gray-300"}`}
-                            ></motion.span>
+                                className={`h-2.5 rounded-full transition-all focus-visible:outline focus-visible:ring-2 focus-visible:ring-accent ${
+                                    currentIndex === index ? "w-8 bg-accent" : "w-2.5 bg-stone-300 hover:bg-stone-400"
+                                }`}
+                            />
                         ))}
                     </motion.div>
                 </div>
             </div>
-        </div>
+        </section>
     );
 };
 

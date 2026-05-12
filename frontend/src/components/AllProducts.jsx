@@ -1,42 +1,90 @@
-import React, { useContext } from "react";
-import { allproducts } from "../assets/assets";
+import { useContext, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { AnimationContext } from "../context/AnimaitonContext";
+import { allproducts } from "../assets/assets";
+import { AnimationContext } from "../context/AnimationContext.jsx";
+import { useCart } from "../hooks/useCart.js";
+import { formatUsd } from "../utils/format.js";
 
-const BestSeller = () => {
-    let currency = "$";
+const FILTERS = [
+    { id: "all", label: "All gear" },
+    { id: "new", label: "New drops" },
+    { id: "bestsellers", label: "Pack favorites" },
+];
+
+const AllProducts = () => {
     const { containerVariants, childVariants } = useContext(AnimationContext);
+    const { addItem } = useCart();
+    const [filter, setFilter] = useState("all");
+
+    const list = useMemo(() => {
+        if (filter === "new") return allproducts.filter((p) => p.new);
+        if (filter === "bestsellers") return allproducts.filter((p) => p.bestsellers);
+        return allproducts;
+    }, [filter]);
 
     return (
-        <div className="flex justify-center mt-10 mb-10">
-            <div className="flex flex-col justify-center max-w-7xl">
-                <h1 className="mb-10 font-bold tracking-widest text-center text-gray-700 uppercase fjalla-one-regular">Pawsitively Pawesome Picks!</h1>
+        <section className="bg-paper py-16">
+            <div className="mx-auto max-w-7xl px-4">
+                <header className="mb-10 text-center">
+                    <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.35em] text-accent">Shop</p>
+                    <h1 className="fjalla-one-regular text-3xl font-normal uppercase tracking-[0.12em] text-ink md:text-4xl">Full catalog</h1>
+                    <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-ink-muted">
+                        Everything we stock for street-smart pups — tap a filter or load up your barkpack.
+                    </p>
+                </header>
 
-                <div className="flex gap-4 mb-4 ml-4 text-xs tracking-widest text-center text-gray-700 uppercase max-w-7xl">
-                    <p>Category:</p>
-                    <p>Tactical gear</p>
-                    <p>PurrTection Gear</p>
+                <div className="mb-10 flex flex-wrap justify-center gap-2">
+                    {FILTERS.map((f) => (
+                        <button
+                            key={f.id}
+                            type="button"
+                            onClick={() => setFilter(f.id)}
+                            className={`rounded-full px-5 py-2 text-[11px] font-semibold uppercase tracking-[0.2em] transition ${
+                                filter === f.id ? "bg-ink text-white shadow-card" : "border border-stone-200 bg-white text-ink-muted hover:border-stone-300"
+                            }`}
+                        >
+                            {f.label}
+                        </button>
+                    ))}
                 </div>
 
-                <motion.div initial="hidden" whileInView="show" variants={containerVariants} viewport={{ once: true }} className="grid grid-cols-2 gap-4 px-4 md:grid-cols-3 lg:grid-cols-3">
-                    {allproducts.map((item, index) => (
-                        <motion.div variants={childVariants} key={index} className="">
-                            <div>
-                                <img src={item.image} alt="" />
+                <motion.div
+                    initial="hidden"
+                    whileInView="show"
+                    variants={containerVariants}
+                    viewport={{ once: true, margin: "-40px" }}
+                    className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:gap-8"
+                >
+                    {list.map((item) => (
+                        <motion.article
+                            key={item.id}
+                            variants={childVariants}
+                            layout
+                            className="group flex flex-col overflow-hidden rounded-2xl border border-stone-100 bg-white shadow-card transition hover:-translate-y-0.5 hover:shadow-lift"
+                        >
+                            <div className="relative aspect-[4/5] overflow-hidden bg-cream">
+                                <img src={item.image} alt="" className="size-full object-cover transition duration-500 group-hover:scale-[1.03]" />
+                                {item.new ? (
+                                    <span className="absolute left-3 top-3 rounded-full bg-accent px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-white">New</span>
+                                ) : null}
                             </div>
-                            <div>
-                                <p className="mt-4 text-sm font-bold tracking-wider text-center fjalla-one-regular">{item.name}</p>
-                                <p className="mt-2 mb-4 text-center text-gray-500">
-                                    {currency}
-                                    {item.price}.00
-                                </p>
+                            <div className="flex flex-1 flex-col gap-2 p-4">
+                                <h2 className="fjalla-one-regular text-center text-sm uppercase tracking-wide text-ink">{item.name}</h2>
+                                <p className="text-center text-sm text-ink-muted">{formatUsd(item.price)}</p>
+                                <button
+                                    type="button"
+                                    className="mt-auto rounded-full bg-ink py-3 text-[10px] font-semibold uppercase tracking-[0.22em] text-white transition hover:bg-accent"
+                                    onClick={() => addItem(item)}
+                                >
+                                    Add to barkpack
+                                </button>
                             </div>
-                        </motion.div>
+                        </motion.article>
                     ))}
                 </motion.div>
             </div>
-        </div>
+        </section>
     );
 };
 
-export default BestSeller;
+export default AllProducts;

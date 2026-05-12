@@ -1,8 +1,9 @@
-import React, { useContext, useState } from "react";
-import { AnimationContext } from "../context/AnimaitonContext";
-import { motion } from "motion/react";
+import { useContext, useState } from "react";
+import { motion } from "framer-motion";
+import { AnimationContext } from "../context/AnimationContext.jsx";
+import { faqData } from "../data/faqData.js";
 
-const FAQ = () => {
+export default function FAQ() {
     const { containerVariants, childVariants } = useContext(AnimationContext);
     const [openQuestion, setOpenQuestion] = useState(null);
 
@@ -10,52 +11,29 @@ const FAQ = () => {
         setOpenQuestion(openQuestion === index ? null : index);
     };
 
-    const faqData = [
-        {
-            question: "When will you restock the treats?",
-            answer: "We know your pup has been counting down! We restock treats every month, so your furry friend won't have to wait too long.",
-        },
-        {
-            question: "What is your return policy?",
-            answer: "If your pup gives us 'the look' of disapproval, you can return any item within 30 days. Just make sure it's still chew-free!",
-        },
-        {
-            question: "How do I return or exchange my order?",
-            answer: "Just like a game of fetch! Send the product back to us, and we'll replace it. No slobber, please.",
-        },
-        {
-            question: "When will my order ship?",
-            answer: "Our team of speedy greyhounds will have your order out the door within 2-5 business days! Tracking info will be emailed so you can follow the journey.",
-        },
-        {
-            question: "How can my pup become a brand ambassador?",
-            answer: "Does your dog have that star power? Head over to our Ambassador Program page and let us know! We love dogs who can pose, pout, and play.",
-        },
-        {
-            question: "Do you have items for “extra chewy” pups?",
-            answer: "Absolutely! Our products are built tough—tested by the most determined chewers out there. Perfect for dogs who think they're part T-Rex.",
-        },
-        {
-            question: "Can I order gear for a pup party?",
-            answer: "Yes! We can help your doggo squad look their best. Reach out, and we’ll set up a bulk order for your bark-worthy event.",
-        },
-    ];
-
     return (
-        <section className="py-12 mt-8 mb-8 uppercase bg-gray-50">
-            <div className="px-4 mx-auto text-center max-w-7xl">
-                <h2 className="mb-6 text-3xl font-bold text-gray-600">FREQUENT QUESTIONS</h2>
-                <p className="mb-12 text-gray-600">Everything you (and your dog) need to know!</p>
-                <motion.div initial="hidden" whileInView="show" variants={containerVariants} viewport={{ once: true }} className="grid grid-cols-1 gap-8 md:grid-cols-2">
+        <section className="mt-8 mb-12 bg-cream/60 py-14 uppercase">
+            <div className="mx-auto max-w-7xl px-4 text-center">
+                <h2 className="fjalla-one-regular mb-2 text-2xl font-normal tracking-[0.15em] text-ink md:text-3xl">Frequent questions</h2>
+                <p className="mb-12 text-sm normal-case tracking-normal text-ink-muted">Everything you (and your dog) need to know.</p>
+                <motion.div initial="hidden" whileInView="show" variants={containerVariants} viewport={{ once: true }} className="grid grid-cols-1 gap-6 text-left md:grid-cols-2 md:gap-8">
                     {faqData.map((item, index) => (
-                        <motion.div variants={childVariants} key={index} className="text-left">
-                            <div className="flex items-center justify-between py-4 border-b border-gray-300 cursor-pointer" onClick={() => toggleQuestion(index)}>
-                                <p className="font-semibold">{item.question}</p>
-                                <span className={`text-xl transition-transform duration-300 ${openQuestion === index ? "-rotate-180" : "rotate-90"}`}>{openQuestion === index ? "-" : "+"}</span>
-                            </div>
-
-                            <div className={`overflow-hidden transition-all duration-300 ease-in-out ${openQuestion === index ? "max-h-40" : "max-h-0"}`}>
-                                <div className="p-4 mt-2 text-sm leading-relaxed tracking-wide text-gray-700 bg-gray-100 rounded-md">{item.answer}</div>
+                        <motion.div variants={childVariants} key={item.question} className="rounded-2xl border border-stone-100 bg-white p-1 shadow-card">
+                            <button
+                                type="button"
+                                className="flex w-full items-center justify-between gap-4 px-4 py-4 text-left normal-case"
+                                aria-expanded={openQuestion === index}
+                                onClick={() => toggleQuestion(index)}
+                            >
+                                <span className="text-sm font-semibold tracking-wide text-ink">{item.question}</span>
+                                <span className="text-xl text-accent transition-transform duration-300" aria-hidden>
+                                    {openQuestion === index ? "−" : "+"}
+                                </span>
+                            </button>
+                            <div className={`grid transition-[grid-template-rows] duration-300 ease-out ${openQuestion === index ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}>
+                                <div className="overflow-hidden">
+                                    <p className="px-4 pb-4 text-sm normal-case leading-relaxed tracking-normal text-ink-muted">{item.answer}</p>
+                                </div>
                             </div>
                         </motion.div>
                     ))}
@@ -63,6 +41,4 @@ const FAQ = () => {
             </div>
         </section>
     );
-};
-
-export default FAQ;
+}

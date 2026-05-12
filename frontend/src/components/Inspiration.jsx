@@ -1,51 +1,60 @@
-import React, { Children, useContext } from "react";
+import { useContext } from "react";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import { assets } from "../assets/assets";
 import ArrowRight02Icon from "../assets/arrow_right";
-import { motion } from "motion/react";
-import { AnimationContext } from "../context/AnimaitonContext";
+import { AnimationContext } from "../context/AnimationContext.jsx";
 
 const Inspiration = () => {
-    const { containerVariants, childVariants, rightVariants, longRightVariants, leftVariants } = useContext(AnimationContext);
+    const { containerVariants, childVariants, rightVariants, leftVariants } = useContext(AnimationContext);
+
     return (
-        <motion.div initial="hidden" whileInView="show" variants={containerVariants} viewport={{ once: true }} className="flex flex-col gap-4 mx-2 mt-10 mb-10 border border-gray-400 lg:flex-row">
-            <motion.div variants={leftVariants} className="justify-center hidden w-2/6 p-12 overflow-hidden lg:flex h-1/4">
-                <img src={assets.Inspire_1} alt="" className="" />
-            </motion.div>
-            <motion.div
-                initial="hidden"
-                whileInView="show"
-                variants={containerVariants}
-                viewport={{ once: true }}
-                className="flex flex-col justify-around w-full gap-4 p-2 text-center lg:w-1/2 md:p-4"
-            >
-                <motion.h1 variants={childVariants} className="text-2xl font-bold tracking-wide text-center uppercase md:leading-relaxed fjalla-one-regular md:text-5xl">
-                    Unleash Your Dog’s Street Fighter Spirit with Bark Brawls
-                </motion.h1>
-                <motion.p variants={childVariants} className="text-sm text-gray-600 md:text-xl">
-                    At Bark Brawls, we’re not just a shop—we’re a movement for tough pups with street smarts and fighting hearts. Born from our love for dogs and the gritty charm of street combat, we
-                    equip dogs with the gear they need to rule the block. Whether your dog’s a scrappy underdog or a fearless heavyweight, our products are built to turn everyday pups into street
-                    champions. Learn more about our journey and join the Bark Brawls pack to see how we’re helping dogs everywhere bring their A-game to the streets.
-                </motion.p>
-                <motion.div variants={childVariants} className="flex justify-around w-full mt-4">
-                    <button className="flex items-center gap-4 px-8 py-2 tracking-widest text-white bg-black rounded-3xl">
-                        <span className="text-xs button-hover-effect">SHOP ALL</span>
-                    </button>
-                    <button className="flex items-center gap-4 px-8 py-2 tracking-widest text-white bg-black rounded-3xl">
-                        <span className="text-xs button-hover-effect">OUR STORY</span>
-                        <ArrowRight02Icon width={20} className="arrow-effect" />
-                    </button>
+        <motion.section
+            initial="hidden"
+            whileInView="show"
+            variants={containerVariants}
+            viewport={{ once: true, margin: "-60px" }}
+            className="mx-2 mt-12 mb-12 overflow-hidden rounded-3xl border border-stone-200/90 bg-white shadow-card md:mx-8"
+        >
+            <div className="flex flex-col gap-6 lg:flex-row lg:items-stretch">
+                <motion.div variants={leftVariants} className="relative hidden w-full overflow-hidden lg:block lg:w-[28%]">
+                    <img src={assets.Inspire_1} alt="" className="h-full min-h-[280px] w-full object-cover" />
                 </motion.div>
-            </motion.div>
 
-            <motion.div variants={rightVariants} className="justify-center hidden w-2/6 p-12 lg:flex h-1/4">
-                <img src={assets.Inspire_2} alt="" className="" />
-            </motion.div>
+                <motion.div variants={containerVariants} initial="hidden" whileInView="show" viewport={{ once: true }} className="flex flex-1 flex-col justify-center gap-6 px-6 py-10 text-center md:px-12">
+                    <motion.h2 variants={childVariants} className="fjalla-one-regular text-2xl font-normal uppercase leading-snug tracking-wide text-ink md:text-4xl md:leading-tight">
+                        Unleash your dog’s street fighter spirit
+                    </motion.h2>
+                    <motion.p variants={childVariants} className="text-sm leading-relaxed text-ink-muted md:text-lg">
+                        At Bark & Brawl, we’re not just a shop—we’re a movement for tough pups with street smarts and fighting hearts. Gear built to turn everyday pups into champions.
+                    </motion.p>
+                    <motion.div variants={childVariants} className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+                        <Link
+                            to="/shop"
+                            className="inline-flex min-w-[160px] items-center justify-center rounded-full bg-ink px-10 py-3 text-[11px] font-semibold uppercase tracking-[0.25em] text-white shadow-card transition hover:bg-accent"
+                        >
+                            Shop all
+                        </Link>
+                        <Link
+                            to="/about"
+                            className="group inline-flex min-w-[160px] items-center justify-center gap-2 rounded-full border border-stone-200 bg-white px-10 py-3 text-[11px] font-semibold uppercase tracking-[0.25em] text-ink transition hover:border-accent hover:text-accent"
+                        >
+                            Our story
+                            <ArrowRight02Icon width={18} className="transition-transform group-hover:translate-x-1" />
+                        </Link>
+                    </motion.div>
+                </motion.div>
 
-            <div className="grid w-full grid-cols-2 gap-4 p-4 lg:hidden">
-                <img src={assets.Inspire_1} alt="" className="w-full" />
-                <img src={assets.Inspire_2} alt="" className="w-full" />
+                <motion.div variants={rightVariants} className="relative hidden overflow-hidden lg:block lg:w-[28%]">
+                    <img src={assets.Inspire_2} alt="" className="h-full min-h-[280px] w-full object-cover" />
+                </motion.div>
+
+                <div className="grid grid-cols-2 gap-3 p-4 lg:hidden">
+                    <img src={assets.Inspire_1} alt="" className="h-full rounded-xl object-cover" />
+                    <img src={assets.Inspire_2} alt="" className="h-full rounded-xl object-cover" />
+                </div>
             </div>
-        </motion.div>
+        </motion.section>
     );
 };
 
